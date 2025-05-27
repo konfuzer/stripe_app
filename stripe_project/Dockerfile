@@ -4,6 +4,10 @@ WORKDIR /app
 
 RUN pip install gunicorn==21.0.0
 
+RUN apt-get update && \
+    apt-get install -y gcc libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt --no-cache-dir

@@ -1,0 +1,63 @@
+<!-- templates/item.html -->
+
+<html>
+<head>
+  <title>{{ item.name }}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      font-size: 1.1em;
+      color: #555;
+    }
+    button {
+      background-color: #6772e5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #5469d4;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ item.name }}</h1>
+  <p>{{ item.description }}</p>
+  <p><strong>{{ item.price }} {{ item.currency }}</strong></p>
+  <button id="buy-button">Buy</button>
+
+  <script src="https://js.stripe.com/v3/ "></script>
+  <script>
+    var stripe = Stripe("{{ stripe_key }}");
+    var buyButton = document.getElementById("buy-button");
+
+    buyButton.addEventListener("click", function(event) {
+      fetch("/buy/{{ item.id }}", { method: "GET" })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(session) {
+          return stripe.redirectToCheckout({ sessionId: session.id });
+        })
+        .then(function(result) {
+          if (result.error) {
+            alert(result.error.message);
+          }
+        });
+    });
+  </script>
+</body>
+</html>

@@ -1,8 +1,11 @@
 import stripe
+
 from django.conf import settings
-from django.shortcuts import render
 from django.http import JsonResponse
+from django.shortcuts import render
+
 from .models import Item
+
 
 def item_detail(request, item_id):
     item = Item.objects.get(id=item_id)
